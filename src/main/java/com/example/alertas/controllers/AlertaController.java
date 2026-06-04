@@ -47,4 +47,10 @@ public class AlertaController {
         alertaService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<AlertaResponse> cambiarEstado(@PathVariable Long id,
+            @RequestBody String nuevoEstado) {
+        return ResponseEntity.ok(alertaService.actualizarEstado(id, nuevoEstado));
+    }
 }

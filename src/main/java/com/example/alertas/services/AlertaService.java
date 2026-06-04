@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import com.example.alertas.exceptions.DuplicateResourceException;
 import com.example.alertas.exceptions.ResourceNotFoundException;
 import com.example.alertas.models.Alerta;
 import com.example.alertas.repositories.AlertaRepository;
@@ -71,6 +70,15 @@ public class AlertaService {
                 .nombrePaciente(entity.getNombrePaciente()).habitacion(entity.getHabitacion())
                 .colorAlerta(entity.getColorAlerta()).signosVitales(entity.getSignosVitales())
                 .fechaHora(entity.getFechaHora()).build();
+    }
+
+    @Transactional
+    public AlertaResponse actualizarEstado(@NonNull Long id, String nuevoEstado) {
+        Alerta alerta = alertaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Alerta no encontrada"));
+
+        alerta.setEstado(nuevoEstado);
+        return convertToResponse(alertaRepository.save(alerta));
     }
 
     private void actualizarEntidad(@NonNull Alerta entity, @NonNull AlertaRequest request) {

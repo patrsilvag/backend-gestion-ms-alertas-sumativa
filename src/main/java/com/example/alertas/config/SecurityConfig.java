@@ -20,11 +20,14 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ Ahora protegemos las alertas: requieren token válido
-                        .requestMatchers("/api/alertas/**").authenticated()
-                        .anyRequest().authenticated())
-                // ✅ Configuramos el backend como un Resource Server de OAuth2
+                        // Permite acceso explícito al método OPTIONS (necesario para CORS
+                        // pre-flight)
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**")
+                        .permitAll().requestMatchers("/api/alertas/**").authenticated().anyRequest()
+                        .authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
+                    // Si tu token de Microsoft tiene configuraciones específicas,
+                    // puedes definir un jwtAuthenticationConverter aquí.
                 }));
 
         return http.build();
@@ -33,10 +36,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // ✅ Se añade 'http://mi-app-docker' como origen permitido
         configuration.setAllowedOrigins(
                 Arrays.asList("http://mi-app-docker", "http://localhost", "http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // ✅ Añadido 'PATCH' a la lista de métodos permitidos
+        configuration.setAllowedMethods(
+                Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);
 

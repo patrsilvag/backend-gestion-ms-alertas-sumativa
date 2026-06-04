@@ -32,6 +32,10 @@ public class Alerta {
     @Column(name = "FECHA_HORA_REGISTRO", nullable = false)
     private LocalDateTime fechaHora;
 
+    @Column(name = "ESTADO", nullable = false)
+    @Builder.Default
+    private String estado = "Pendiente"; // Valor por defecto
+
     @PrePersist
     protected void onCreate() {
         this.fechaHora = LocalDateTime.now();
