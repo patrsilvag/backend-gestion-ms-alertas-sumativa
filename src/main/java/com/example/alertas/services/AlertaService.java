@@ -69,7 +69,9 @@ public class AlertaService {
         return AlertaResponse.builder().id(entity.getId())
                 .nombrePaciente(entity.getNombrePaciente()).habitacion(entity.getHabitacion())
                 .colorAlerta(entity.getColorAlerta()).signosVitales(entity.getSignosVitales())
-                .fechaHora(entity.getFechaHora()).build();
+                .fechaHora(entity.getFechaHora()).estado(entity.getEstado()) // <--- ESTA LÍNEA ES
+                                                                             // LA QUE FALTA
+                .build();
     }
 
     @Transactional
@@ -86,5 +88,10 @@ public class AlertaService {
         entity.setHabitacion(request.getHabitacion());
         entity.setColorAlerta(request.getColorAlerta());
         entity.setSignosVitales(request.getSignosVitales());
+
+        // Si quieres que el usuario pueda enviar el estado en la creación:
+        if (request.getEstado() != null) {
+            entity.setEstado(request.getEstado());
+        }
     }
 }

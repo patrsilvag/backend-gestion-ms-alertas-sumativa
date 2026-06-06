@@ -2,6 +2,7 @@ package com.example.alertas.controllers;
 
 import com.example.alertas.dto.AlertaRequest;
 import com.example.alertas.dto.AlertaResponse;
+import com.example.alertas.dto.EstadoRequest;
 import com.example.alertas.services.AlertaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,6 @@ public class AlertaController {
 
     @GetMapping({"", "/"})
     public ResponseEntity<List<AlertaResponse>> listar() {
-        System.out.println("ENTRO AL CONTROLADOR DE ALERTAS");
         return ResponseEntity.ok(alertaService.listarTodas());
     }
 
@@ -50,7 +50,7 @@ public class AlertaController {
 
     @PatchMapping("/{id}/estado")
     public ResponseEntity<AlertaResponse> cambiarEstado(@PathVariable Long id,
-            @RequestBody String nuevoEstado) {
-        return ResponseEntity.ok(alertaService.actualizarEstado(id, nuevoEstado));
+            @RequestBody EstadoRequest request) {
+        return ResponseEntity.ok(alertaService.actualizarEstado(id, request.getEstado()));
     }
 }

@@ -16,6 +16,7 @@ public class AlertaResponse {
     private String nombrePaciente;
     private String habitacion;
     private String colorAlerta;
+    private String estado; // Añade este campo
     private String signosVitales;
     private LocalDateTime fechaHora;
 }
